@@ -1,2 +1,9 @@
+1.22	Tuesday, 12th August 2003
+	lose the dependency on Exporter::Simple, which opens us up to
+	5.6 users.  Thanks to Gavin Estey for this work.
+	
+	went one step further and backported to 5.00503.  Thank the
+	Northern Line for being slow
+
 1.21	Wednesday, 6th August 2003
 	initial CPAN release

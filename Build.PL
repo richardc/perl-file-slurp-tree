@@ -11,7 +11,6 @@ Module::Build
              'File::Path'       => 0,
              'File::Slurp'      => 0,
              'File::Find::Rule' => 0,
-             'Exporter::Simple' => 0,
          },
          create_makefile_pl => 'traditional',
        )

@@ -1,12 +1,14 @@
 package File::Slurp::Tree;
 use strict;
-use warnings;
 use File::Find::Rule;
-use File::Path qw( mkpath );
-use File::Slurp qw( read_file );
-use Exporter::Simple;
+use File::Path  qw( mkpath );
+use File::Slurp qw( read_file write_file );
+require Exporter;
+use base 'Exporter';
+use vars qw(@EXPORT $VERSION);
 
-our $VERSION = 1.21;
+@EXPORT = qw( slurp_tree spew_tree );
+$VERSION = 1.22;
 
 =head1 NAME
 
@@ -53,7 +55,7 @@ in the path.  defaults to an empty rule (matches everything)
 
 =cut
 
-sub slurp_tree :Exported {
+sub slurp_tree {
     my $top = shift;
     my %args = @_;
 
@@ -88,7 +90,7 @@ Creates a file tree as described by C<$tree> at C<$path>
 
 =cut
 
-sub spew_tree :Exported {
+sub spew_tree {
     my ($top, $tree) = @_;
     eval { mkpath( $top ) };
     for my $stem (keys %$tree) {
@@ -96,8 +98,8 @@ sub spew_tree :Exported {
             spew_tree( "$top/$stem", $tree->{ $stem } );
         }
         else { # file
-            open my $fh, ">$top/$stem";
-            print $fh $tree->{ $stem } if defined $tree->{ $stem };
+            write_file( "$top/$stem", $tree->{ $stem } )
+              if defined $tree->{ $stem }; # avoid an undef warning
         }
     }
     return 1;
