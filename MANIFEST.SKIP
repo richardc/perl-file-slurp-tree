@@ -1,0 +1,10 @@
+MANIFEST.SKIP
+.cvsignore
+\.svn
+blib/
+^Makefile$
+pm_to_blib
+_build
+^Build$
+~$
+^t/sample/

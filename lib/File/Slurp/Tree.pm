@@ -1,5 +1,6 @@
-use strict;
 package File::Slurp::Tree;
+use strict;
+use warnings;
 use File::Find::Rule;
 use File::Path qw( mkpath );
 use File::Slurp qw( read_file );
@@ -13,7 +14,7 @@ File::Slurp::Tree - slurp and emit file trees as nested hashes
 
 =head1 SYNOPSIS
 
- # (inneficently) duplicate a file tree from path a to b
+ # (inefficiently) duplicate a file tree from path a to b
  use File::Slurp::Tree;
  my $tree = slurp_tree( "path_a" );
  spew_tree( "path_b" => $tree );
@@ -23,34 +24,43 @@ File::Slurp::Tree - slurp and emit file trees as nested hashes
 File::Slurp::Tree provides functions for slurping and emitting trees
 of files and directories.
 
-It may be considered a testing tool, or simply something diagnostic:
-
- # an example of use in a testsuite
+ # an example of use in a test suite
  use Test::More tests => 1;
  use File::Slurp::Tree;
- is_deeply( slurp_tree( "t/some_path" ), { foo => {} },
-            "some_path just contains a directory called foo" );
+ is_deeply( slurp_tree( "t/some_path" ), { foo => {}, bar => "sample\n" },
+            "some_path contains a directory called foo, and a file bar" );
 
- # as a diagnostic
- use File::Slurp::Tree;
- use YAML;
- print "Config directory contains:\n"
- print Dump slurp_tree "$ENV{HOME}/.app";
+The tree datastructure is a hash of hashes.  The keys of each hash are
+names of directories or files.  Directories have hash references as
+their value, files have a scalar which holds the contents of the file.
 
-=head1 SUBROUTINES
+=head1 EXPORTED ROUTINES
 
-=head2 slurp_tree( $path )
+=head2 slurp_tree( $path, %options )
 
 return a nested hash reference containing everything within $path
 
+%options may include the following keys:
+
+=over
+
+=item rule
+
+a L<File::Find::Rule> object that will match the files and directories
+in the path.  defaults to an empty rule (matches everything)
+
+=back
+
 =cut
 
-# slurp a file tree into a hash of hashes
 sub slurp_tree :Exported {
     my $top = shift;
+    my %args = @_;
+
+    my $rule = $args{rule} || File::Find::Rule->new;
 
     my $tree = {};
-    for my $file ( find( in => $top ) ) {
+    for my $file ( $rule->in( $top ) ) {
         next if $file eq $top;
         (my $rel = $file) =~ s{^\Q$top\E/}{};
         my @elems = split m{/}, $rel;
@@ -74,9 +84,10 @@ sub slurp_tree :Exported {
 
 =head2 spew_tree( $path => $tree )
 
+Creates a file tree as described by C<$tree> at C<$path>
+
 =cut
 
-# create a tree from a hash of hashes
 sub spew_tree :Exported {
     my ($top, $tree) = @_;
     eval { mkpath( $top ) };
@@ -101,6 +112,8 @@ None currently known.  If you find any please either contact me
 directly or make use of L<http://rt.cpan.org> by mailing your report
 to bug-File-Slurp-Tree@rt.cpan.org
 
+XXX is that really bugs-* ?
+
 =head1 AUTHOR
 
 Richard Clamp <richardc@unixbeard.net>
@@ -114,6 +127,6 @@ under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-  L<File::Slurp>, L<Test::More>
+L<File::Slurp>, L<Test::More>
 
 =cut

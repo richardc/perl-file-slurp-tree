@@ -15,7 +15,7 @@ ok( !-e $path, "no $path at start" );
 ok( spew_tree( $path => $tree ), "spewed a tree" );
 
 ok( -e $path, "now a $path" );
-ok( -s "$path/file", "there's a file");
+ok( -e "$path/file", "there's a file");
 is( -s "$path/file", length $tree->{file}, " of the right size" );
 
 ok( -e "$path/subdir", "and a subdirectory" );
