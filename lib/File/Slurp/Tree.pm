@@ -108,11 +108,9 @@ __END__
 
 =head1 BUGS
 
-None currently known.  If you find any please either contact me
-directly or make use of L<http://rt.cpan.org> by mailing your report
-to bug-File-Slurp-Tree@rt.cpan.org
-
-XXX is that really bugs-* ?
+None currently known.  If you find any please make use of
+L<http://rt.cpan.org> by mailing your report to
+bug-File-Slurp-Tree@rt.cpan.org, or contact me directly.
 
 =head1 AUTHOR
 
