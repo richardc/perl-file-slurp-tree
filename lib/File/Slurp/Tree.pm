@@ -8,7 +8,7 @@ use base 'Exporter';
 use vars qw(@EXPORT $VERSION);
 
 @EXPORT = qw( slurp_tree spew_tree );
-$VERSION = 1.22;
+$VERSION = 1.23;
 
 =head1 NAME
 
@@ -77,7 +77,7 @@ sub slurp_tree {
             }
             else {
                 # a file, slurp it
-                $node->{ $elem } = read_file "$file";
+                $node->{ $elem } = read_file "$file", binmode => ':raw';
             }
         }
     }
@@ -98,7 +98,7 @@ sub spew_tree {
             spew_tree( "$top/$stem", $tree->{ $stem } );
         }
         else { # file
-            write_file( "$top/$stem", $tree->{ $stem } )
+            write_file( "$top/$stem", { binmode => ':raw' }, $tree->{ $stem } )
               if defined $tree->{ $stem }; # avoid an undef warning
         }
     }
@@ -110,9 +110,7 @@ __END__
 
 =head1 BUGS
 
-None currently known.  If you find any please make use of
-L<http://rt.cpan.org> by mailing your report to
-bug-File-Slurp-Tree@rt.cpan.org, or contact me directly.
+None currently known.  If you find any please contact the author.
 
 =head1 AUTHOR
 
@@ -120,7 +118,7 @@ Richard Clamp <richardc@unixbeard.net>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Richard Clamp.  All Rights Reserved.
+Copyright (C) 2003, 2006 Richard Clamp.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
