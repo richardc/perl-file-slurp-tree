@@ -1,4 +1,4 @@
-HEAD
+1.24    Friday 14th July, 2006
 	Cope with slurp_tree("some_path/") (ie, with a trailing slash) and
 	slurp_tree("/") (still not really recommended).
 

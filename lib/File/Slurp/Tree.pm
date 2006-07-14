@@ -8,7 +8,7 @@ use base 'Exporter';
 use vars qw(@EXPORT $VERSION);
 
 @EXPORT = qw( slurp_tree spew_tree );
-$VERSION = 1.23;
+$VERSION = 1.24;
 
 =head1 NAME
 
