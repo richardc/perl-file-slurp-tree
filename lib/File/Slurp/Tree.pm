@@ -56,15 +56,21 @@ in the path.  defaults to an empty rule (matches everything)
 =cut
 
 sub slurp_tree {
-    my $top = shift;
+    my $in = shift;
     my %args = @_;
 
-    my $rule = $args{rule} || File::Find::Rule->new;
+    # top must not have a trailing slash, in may.  this fixes Greg's bug
+    # and allows in to be "/"
+    (my $top = $in) =~ s{/$}{};
 
+    my $rule = $args{rule} || File::Find::Rule->new;
     my $tree = {};
-    for my $file ( $rule->in( $top ) ) {
+    for my $file ( $rule->in( $in ) ) {
         next if $file eq $top;
         (my $rel = $file) =~ s{^\Q$top\E/}{};
+        next unless $rel; # it's /
+        #print "top:$top file:$file rel:$rel\n";
+
         my @elems = split m{/}, $rel;
 
         # go to the top of the tree
